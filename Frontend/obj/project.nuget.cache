@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "iNZO426xyh4=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Azure\\Desktop\\DevHub\\Experiments\\MicroLanguageForTranspiling\\Frontend\\Frontend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Azure\\.nuget\\packages\\microsoft.dotnet.ilcompiler\\10.0.2\\microsoft.dotnet.ilcompiler.10.0.2.nupkg.sha512",
+    "C:\\Users\\Azure\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.2\\microsoft.net.illink.tasks.10.0.2.nupkg.sha512",
+    "C:\\Users\\Azure\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\10.0.2\\runtime.win-x64.microsoft.dotnet.ilcompiler.10.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
