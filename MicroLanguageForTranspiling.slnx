@@ -4,6 +4,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Backend/Backend.vcxproj" />
+  <Project Path="Backend/Backend.vcxproj" Id="f25c835b-f631-4110-b162-e33de43ce0fc" />
   <Project Path="Frontend/Frontend.csproj" />
 </Solution>

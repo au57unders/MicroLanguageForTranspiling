@@ -15,17 +15,17 @@ int main() {
 	double total = score + bonus;
 	if (total > 100) {
 
-	printf("%d\n", "HighScore");
+	printf("%s\n", "HighScore");
 
 	printf("%s\n", name);
 
 	} else if (total == 100) {
 
-	printf("%d\n", "100, interesting");
+	printf("%s\n", "100, interesting");
 
 	} else {
 
-	printf("%d\n", "loser");
+	printf("%s\n", "loser");
 
 	}
 

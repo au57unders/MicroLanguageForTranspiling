@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mlt")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+878287144c26dc091e6b87eef105c52db79551ff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0b34e6fce51eea1af964d1fd2c4558f5ef065555")]
 [assembly: System.Reflection.AssemblyProductAttribute("mlt")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mlt")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

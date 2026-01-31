@@ -26,6 +26,8 @@ Token MLTParser::GetNextToken()
 		if (word == "else") return { TokenType::Else, word };
 		if (word == "elif") return { TokenType::Elif, word };
 		if (word == "end") return { TokenType::EndBlock, word };
+		if (word == "while") return { TokenType::While, word };
+		if (word == "do") return { TokenType::DoWhile, word };
 		return { TokenType::Identifier, word }; // instead of just ending, just make it return a var, like a real lang
 	}
 	if (current == '+') return { TokenType::Plus, "+" };
@@ -42,7 +44,7 @@ Token MLTParser::GetNextToken()
 		std::string str;
 		while (pos < source.length() && source[pos] != '"') str += source[pos++];
 		pos++;
-		return {TokenType::Number, "\"" + str + "\""}; // \ and " confuses me
+		return {TokenType::String, "\"" + str + "\""}; // \ and " confuses me
 	}
 	if (current == '=') {
 		if (pos < source.length() && source[pos] == '=') {
@@ -77,6 +79,19 @@ std::string MLTParser::TranspileToC() {
 		if (target.type == TokenType::Number) return "printf(\"%d\\n\", " + target.value + ");\n";
 		else return "printf(\"%s\\n\", " + target.value + ");\n";
 	}
+	if (t1.type == TokenType::While) {
+		Token Left = GetNextToken();
+		Token _op = GetNextToken();
+		Token Right = GetNextToken();
+		return "while (" + Left.value + " " + _op.value + " " + Right.value + ") {\n";
+	}
+	if (t1.type == TokenType::DoWhile) {
+		Token Left = GetNextToken();
+		Token _op = GetNextToken();
+		Token Right = GetNextToken();
+		return "do {\n";
+	}
+
 	if (t1.type == TokenType::Identifier || t1.type == TokenType::Number) {
 		Token op = GetNextToken();
 		if (op.type == TokenType::End) return t1.value + ";";
@@ -130,6 +145,20 @@ std::string MLTParser::TranspileToCSharp()
 	}
 	if (t1.type == TokenType::Else) return "} else {\n";
 	if (t1.type == TokenType::EndBlock) return "}\n";
+	if (t1.type == TokenType::While) {
+		Token Left = GetNextToken();
+		Token _op = GetNextToken();
+		Token Right = GetNextToken();
+		return "while (" + Left.value + " " + _op.value + " " + Right.value + ") {\n";
+	}
+	if (t1.type == TokenType::DoWhile) {
+		Token Left = GetNextToken();
+		Token _op = GetNextToken();
+		Token Right = GetNextToken();
+		return "do {\n";
+		// Wait! I forgot to add the } , unless the user uses the "end" keyword aka "endblock" in the enum
+		// Readers, pls add it if u can
+	}
 	if (t1.type == TokenType::Identifier || t1.type == TokenType::Number) {
 		Token op = GetNextToken();
 		if (op.type == TokenType::End) return t1.value + ";";
@@ -190,7 +219,31 @@ std::string MLTParser::TranspileToRust()
 		Token target = GetNextToken();
 		return "println!(\"{}\", " + target.value + ");\n";
 	}
-
+	// Rewrite the while loop if it's broken/slow or needs to be reworked
+	if (t1.type == TokenType::While) {
+		Token Left = GetNextToken();
+		Token _op = GetNextToken();
+		Token Right = GetNextToken();
+		pendingRustBreak = Left.value + " " + _op.value + " " + Right.value;
+		isDoWhile = false;
+		return "loop {\n";
+	}
+	if (t1.type == TokenType::DoWhile) {
+		Token Left = GetNextToken();
+		Token _op = GetNextToken();
+		Token Right = GetNextToken();
+		pendingRustBreak = Left.value + " " + _op.value + " " + Right.value;
+		isDoWhile = true;
+		return "loop {\n";
+	}
+	if (t1.type == TokenType::EndBlock) {
+		if (!pendingRustBreak.empty()) {
+			std::string condition = pendingRustBreak;
+			pendingRustBreak = "";
+			return "if " + condition + " {\n";
+		}
+		return "}\n";
+	}
 	if (t1.type == TokenType::Identifier || t1.type == TokenType::Number) {
 		Token op = GetNextToken();
 

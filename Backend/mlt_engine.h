@@ -8,6 +8,7 @@
 
 enum class TokenType {
 	Number,
+	String,
 	Plus,
 	Minus,
 	Multiply,
@@ -15,13 +16,15 @@ enum class TokenType {
 	MoreThan,
 	LessThan,
 	Print,
-	Assign, 
+	Assign,
 	Equal,
 	If,
 	Else,
 	Elif,
 	EndBlock,
 	Identifier,
+	While,
+	DoWhile,
 	End
 };
 
@@ -52,6 +55,9 @@ public:
 
 private:
 	std::map < std::string, std::string> symbols;
+	// Let's get rusty
+	std::string pendingRustBreak = "";
+	bool isDoWhile = false;
 };
 
 
