@@ -208,7 +208,7 @@ std::string MLTParser::TranspileToRust()
 			return "let " + t1.value + " = " + val.value + ";";
 		}
 		Token t2 = GetNextToken();
-		return t1.value + " " + op.value + " " + t2.value + ";";
+		return "let _ = " + t1.value + " " + op.value + " " + t2.value + ";";
 	}
 
 	return "";
