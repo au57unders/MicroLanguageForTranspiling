@@ -21,6 +21,10 @@ class Program
             "cs" => ".cs",
             "cpp" => ".cpp",
             "c" => ".c",
+            "go" => ".go",
+            "golang" => ".go",
+            "rust" => ".rs",
+            "rs" => ".rs",
             _ => ".txt"
         };
 

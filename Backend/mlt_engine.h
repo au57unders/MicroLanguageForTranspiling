@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <map>
 
 enum class TokenType {
 	Number,
@@ -13,7 +15,13 @@ enum class TokenType {
 	MoreThan,
 	LessThan,
 	Print,
-
+	Assign, 
+	Equal,
+	If,
+	Else,
+	Elif,
+	EndBlock,
+	Identifier,
 	End
 };
 
@@ -28,46 +36,30 @@ class MLTParser {
 
 public: 
 	MLTParser(std::string src) : source(src) {};
+	
+	Token GetNextToken();
 
-	Token GetNextToken() {
-		while (pos < source.length() && isspace(source[pos])) pos++;
-
-		if (pos >= source.length()) return { TokenType::End, "" };
-		char current = source[pos++];
-		if (current >= '0' && current <= '9') {
-			std::string num;
-			num += current;
-			while (pos < source.length() && isdigit(source[pos])) num += source[pos++];
-			return { TokenType::Number, num };
-		}
-		if (isalpha(current)) {
-			std::string word;
-			word += current;
-			while (pos < source.length() && isalnum(source[pos])) word += source[pos++];
-			if (word == "print") return { TokenType::Print, word };
-
-			return { TokenType::End, word };
-		}
-		if (current == '+') return { TokenType::Plus, "+" };
-		if (current == '-') return { TokenType::Minus, "-" };
-		if (current == '*') return { TokenType::Multiply, "*" };
-		if (current == '/') return { TokenType::Divide, "/" };
-		if (current == '>') return { TokenType::MoreThan, ">" };
-		if (current == '<') return { TokenType::LessThan, "<" };
-		return { TokenType::End, "" };
+	void SetSource(std::string src) {
+		source = src;
+		pos = 0;
 	}
 
 	// Since this is a transpiling language, let's add a TranspileToC method
+	// Add more languages
 	std::string TranspileToC();
 	std::string TranspileToCSharp();
+	std::string TranspileToRust();
+
+private:
+	std::map < std::string, std::string> symbols;
 };
 
 
 extern "C" {
-	_declspec(dllexport) const char* TranspileLine(const char* input, const char* lang) {
+	_declspec(dllexport) const char* TranspileLine(const char* input, const char* lang, MLTParser& parser) {
 		static std::string result;
 		result.clear();
-		MLTParser parser(input);
+		
 		std::string target(lang);
 		
 			if (target == "c" || target == "cpp") 
@@ -76,6 +68,9 @@ extern "C" {
 			}
 			else if (target == "csharp" || target == "cs") {
 				result = parser.TranspileToCSharp();
+			}
+			else if (target == "rust" || target == "rs") {
+				result = parser.TranspileToRust();
 			}
 			else {
 				result = "Unsupported Language";
@@ -86,6 +81,8 @@ extern "C" {
 													const char* out,
 													const char* lang) 
 	{
+		// moved parser here so variables can be used, hope it works
+		MLTParser parser("");
 		std::ifstream input(in);
 		if (!input.is_open()) return "";
 		std::ofstream output(out);
@@ -94,19 +91,29 @@ extern "C" {
 		if (targetlang == "c") {
 			output << "#include <stdio.h>\n\nint main() {\n";
 		}
+		else if (targetlang == "c") {
+			output << "#include <cstdio>\n\nint main() {\n";
+		}
 		else if (targetlang == "csharp") {
 			output << "using System;\n\nclass Program {\n  static void Main(string[] args) {\n";
+		}
+		else if (targetlang == "rust" || targetlang == "rs") {
+			output << "fn main() {\n";
 		}
 		while (std::getline(input, line)) {
 			if (line.empty()) continue;
 			std::cout << line << "\n";
-			const char* result = TranspileLine(line.c_str(), lang);
+			parser.SetSource(line);
+			const char* result = TranspileLine(line.c_str(), lang, parser);
 			output << "	" << result << "\n";
 		}
-		if (targetlang == "c") {
+		if (targetlang == "c" || targetlang == "cpp") {
 			output << "	return 0;\n}\n";
-		} else if (targetlang == "csharp") {
+		} else if (targetlang == "csharp" || targetlang == "cs") {
 			output << "}\n}\n";
+		}
+		else if (targetlang == "rust" || targetlang == "rs") {
+			output << "}\n";
 		}
 		return "File transpiled successfully.";
 	}

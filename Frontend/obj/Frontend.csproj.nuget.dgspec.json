@@ -8,7 +8,7 @@
       "version": "1.0.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\Azure\\Desktop\\DevHub\\Experiments\\MicroLanguageForTranspiling\\Frontend\\Frontend.csproj",
-        "projectName": "Frontend",
+        "projectName": "mlt",
         "projectPath": "C:\\Users\\Azure\\Desktop\\DevHub\\Experiments\\MicroLanguageForTranspiling\\Frontend\\Frontend.csproj",
         "packagesPath": "C:\\Users\\Azure\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Azure\\Desktop\\DevHub\\Experiments\\MicroLanguageForTranspiling\\Frontend\\obj\\",
