@@ -16,3 +16,13 @@ else
 	print "loser"
 end
 total * 2
+
+x = 17
+while x < 10
+	print x
+end
+do x++
+end
+while x < 20
+	print x
+end

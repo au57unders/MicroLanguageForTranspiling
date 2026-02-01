@@ -30,5 +30,22 @@ int main() {
 	}
 
 	total * 2;
+	double x = 17;
+	while (x < 10) {
+
+	printf("%s\n", x);
+
+	}
+
+	do {
+
+	} while (x + +);
+
+	while (x < 20) {
+
+	printf("%s\n", x);
+
+	}
+
 	return 0;
 }

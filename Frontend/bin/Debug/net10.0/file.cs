@@ -24,5 +24,20 @@ class Program {
 	}
 
 	total * 2;
+	double x = 17;
+	while (x < 10) {
+
+	Console.WriteLine(x);
+	}
+
+	do {
+
+	} while (x + +);
+
+	while (x < 20) {
+
+	Console.WriteLine(x);
+	}
+
 }
 }

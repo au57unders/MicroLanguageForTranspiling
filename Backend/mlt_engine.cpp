@@ -73,7 +73,17 @@ std::string MLTParser::TranspileToC() {
 		return "} else if (" + Left.value + " " + _op.value + " " + Right.value + ") {\n";
 	}
 	if (t1.type == TokenType::Else) return "} else {\n";
-	if (t1.type == TokenType::EndBlock) return "}\n";
+	if (t1.type == TokenType::EndBlock) {
+		if (!pendingCondition.empty()) {
+			if (isDoWhile) {
+				std::string result = "} while (" + pendingCondition + ");\n";
+				pendingCondition = "";
+				isDoWhile = false;
+				return result;
+			}
+		}
+		return "}\n";
+	}
 	if (t1.type == TokenType::Print) {
 		Token target = GetNextToken();
 		if (target.type == TokenType::Number) return "printf(\"%d\\n\", " + target.value + ");\n";
@@ -89,6 +99,8 @@ std::string MLTParser::TranspileToC() {
 		Token Left = GetNextToken();
 		Token _op = GetNextToken();
 		Token Right = GetNextToken();
+		pendingCondition = Left.value + " " + _op.value + " " + Right.value;
+		isDoWhile = true;
 		return "do {\n";
 	}
 
@@ -144,7 +156,17 @@ std::string MLTParser::TranspileToCSharp()
 		return "} else if (" + Left.value + " " + _op.value + " " + Right.value + ") {\n";
 	}
 	if (t1.type == TokenType::Else) return "} else {\n";
-	if (t1.type == TokenType::EndBlock) return "}\n";
+	if (t1.type == TokenType::EndBlock) {
+		if (!pendingCondition.empty()) {
+			if (isDoWhile) {
+				std::string result = "} while (" + pendingCondition + ");\n";
+				pendingCondition = "";
+				isDoWhile = false;
+				return result;
+			}
+		}
+		return "}\n";
+	}
 	if (t1.type == TokenType::While) {
 		Token Left = GetNextToken();
 		Token _op = GetNextToken();
@@ -155,9 +177,9 @@ std::string MLTParser::TranspileToCSharp()
 		Token Left = GetNextToken();
 		Token _op = GetNextToken();
 		Token Right = GetNextToken();
+		pendingCondition = Left.value + " " + _op.value + " " + Right.value;
+		isDoWhile = true;
 		return "do {\n";
-		// Wait! I forgot to add the } , unless the user uses the "end" keyword aka "endblock" in the enum
-		// Readers, pls add it if u can
 	}
 	if (t1.type == TokenType::Identifier || t1.type == TokenType::Number) {
 		Token op = GetNextToken();
@@ -213,7 +235,6 @@ std::string MLTParser::TranspileToRust()
 		return "} else if " + Left.value + " " + _op.value + " " + Right.value + " {\n";
 	}
 	if (t1.type == TokenType::Else) return "} else {\n";
-	if (t1.type == TokenType::EndBlock) return "}\n";
 
 	if (t1.type == TokenType::Print) {
 		Token target = GetNextToken();
@@ -224,7 +245,7 @@ std::string MLTParser::TranspileToRust()
 		Token Left = GetNextToken();
 		Token _op = GetNextToken();
 		Token Right = GetNextToken();
-		pendingRustBreak = Left.value + " " + _op.value + " " + Right.value;
+		pendingCondition = Left.value + " " + _op.value + " " + Right.value;
 		isDoWhile = false;
 		return "loop {\n";
 	}
@@ -232,15 +253,18 @@ std::string MLTParser::TranspileToRust()
 		Token Left = GetNextToken();
 		Token _op = GetNextToken();
 		Token Right = GetNextToken();
-		pendingRustBreak = Left.value + " " + _op.value + " " + Right.value;
+		pendingCondition = Left.value + " " + _op.value + " " + Right.value;
 		isDoWhile = true;
 		return "loop {\n";
 	}
 	if (t1.type == TokenType::EndBlock) {
-		if (!pendingRustBreak.empty()) {
-			std::string condition = pendingRustBreak;
-			pendingRustBreak = "";
-			return "if " + condition + " {\n";
+		if (!pendingCondition.empty()) {
+			if (isDoWhile) {
+				std::string result = "if " + pendingCondition + " {\nbreak;\n}\n";
+				pendingCondition = "";
+				isDoWhile = false;
+				return result;
+			}
 		}
 		return "}\n";
 	}

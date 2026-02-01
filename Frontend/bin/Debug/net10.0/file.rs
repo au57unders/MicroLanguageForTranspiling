@@ -2,10 +2,10 @@ fn main() {
 	
 	println!("{}", 150000);
 
-	100 + 500;
+	let _ = 100 + 500;
 	println!("{}", 10);
 
-	20 * 5;
+	let _ = 20 * 5;
 	println!("{}", 999);
 
 	let score = 100;
@@ -27,5 +27,24 @@ fn main() {
 
 	}
 
-	total * 2;
+	let _ = total * 2;
+	let x = 17;
+	loop {
+
+	println!("{}", x);
+
+	}
+
+	loop {
+
+	if x + + {
+break;
+}
+
+	loop {
+
+	println!("{}", x);
+
+	}
+
 }

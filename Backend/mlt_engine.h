@@ -54,9 +54,9 @@ public:
 	std::string TranspileToRust();
 
 private:
-	std::map < std::string, std::string> symbols;
-	// Let's get rusty
-	std::string pendingRustBreak = "";
+	std::map < std::string, std::string> symbols; 
+	//realized everything needs a pending condition and isdowhile
+	std::string pendingCondition = "";
 	bool isDoWhile = false;
 };
 
@@ -97,10 +97,10 @@ extern "C" {
 		if (targetlang == "c") {
 			output << "#include <stdio.h>\n\nint main() {\n";
 		}
-		else if (targetlang == "c") {
+		else if (targetlang == "cpp") {
 			output << "#include <cstdio>\n\nint main() {\n";
 		}
-		else if (targetlang == "csharp") {
+		else if (targetlang == "csharp" || targetlang == "cs") {
 			output << "using System;\n\nclass Program {\n  static void Main(string[] args) {\n";
 		}
 		else if (targetlang == "rust" || targetlang == "rs") {
